@@ -70,12 +70,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         }
 
         // Setting up the Initial Chess board.
-/*
+      //whitepawn setup was commented out
+
   	for(int i=8;i < 16; i++){
        		pieces = new JLabel( new ImageIcon("WhitePawn.png") );
 			panels = (JPanel)chessBoard.getComponent(i);
 	        panels.add(pieces);
-		}*/
+		}
 		pieces = new JLabel( new ImageIcon("WhiteRook.png") );
 		panels = (JPanel)chessBoard.getComponent(0);
 	    panels.add(pieces);
@@ -836,18 +837,18 @@ private void printStack(Stack input){
           We need to identify all the possible moves that can be made by the AI Opponent
       */
       if(tmpString.contains("Knight")){
-    //    tmpMoves = getKnightMoves(s.getXC(), s.getYC(), s.getName());
+       tmpMoves = getKnightMoves(s.getXC(), s.getYC(), s.getName());
       }
       else if(tmpString.contains("Bishop")){
-    //    tmpMoves = getBishopMoves(s.getXC(), s.getYC(), s.getName());
+      tmpMoves = getBishopMoves(s.getXC(), s.getYC(), s.getName());
       }
       else if(tmpString.contains("Pawn")){
       }
       else if(tmpString.contains("Rook")){
-      //  tmpMoves = getRookMoves(s.getXC(), s.getYC(), s.getName());
+       tmpMoves = getRookMoves(s.getXC(), s.getYC(), s.getName());
       }
       else if(tmpString.contains("Queen")){
-      //  tmpMoves = getQueenMoves(s.getXC(), s.getYC(), s.getName());
+       tmpMoves = getQueenMoves(s.getXC(), s.getYC(), s.getName());
       }
       else if(tmpString.contains("King")){
         tmpMoves = getKingSquares(s.getXC(), s.getYC(), s.getName());
