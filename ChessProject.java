@@ -42,9 +42,11 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
 
     public ChessProject() {
+        //board dimensions 600x600
         Dimension boardSize = new Dimension(600, 600);
 
         //  Use a Layered Pane for this application
+        //JLayeredPane adds depth to board so that pieces can overlap the chess board
         layeredPane = new JLayeredPane();
         getContentPane().add(layeredPane);
         layeredPane.setPreferredSize(boardSize);
@@ -70,66 +72,103 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         }
 
         // Setting up the Initial Chess board.
+        //board was setup using JLayeredPane by declaring the board size and each square on the board so that the pieces can move into them
         //whitepawn setup was commented out
 
+        //white pawns are being added to squares 8-16 by using a simple for loop
         for (int i = 8; i < 16; i++) {
             pieces = new JLabel(new ImageIcon("Img/WhitePawn.png"));
             panels = (JPanel) chessBoard.getComponent(i);
             panels.add(pieces);
         }
+
+        //white rook is being added to square 0
         pieces = new JLabel(new ImageIcon("Img/WhiteRook.png"));
         panels = (JPanel) chessBoard.getComponent(0);
         panels.add(pieces);
+
+        //White knight is being added to square 1
         pieces = new JLabel(new ImageIcon("Img/WhiteKnight.png"));
         panels = (JPanel) chessBoard.getComponent(1);
         panels.add(pieces);
+
+        //white knight is being added to square 6
         pieces = new JLabel(new ImageIcon("Img/WhiteKnight.png"));
         panels = (JPanel) chessBoard.getComponent(6);
         panels.add(pieces);
+
+        //white bishop is being added to square 2
         pieces = new JLabel(new ImageIcon("Img/WhiteBishop.png"));
         panels = (JPanel) chessBoard.getComponent(2);
         panels.add(pieces);
+
+        //white bishop is being added to square 5
         pieces = new JLabel(new ImageIcon("Img/WhiteBishop.png"));
         panels = (JPanel) chessBoard.getComponent(5);
         panels.add(pieces);
+
+        //white knight is being added to square 3
         pieces = new JLabel(new ImageIcon("Img/WhiteKing.png"));
         panels = (JPanel) chessBoard.getComponent(3);
         panels.add(pieces);
+
+        //white queen is being added to square 4
         pieces = new JLabel(new ImageIcon("Img/WhiteQueen.png"));
         panels = (JPanel) chessBoard.getComponent(4);
         panels.add(pieces);
+
+        //white rook is being added to square 7
         pieces = new JLabel(new ImageIcon("Img/WhiteRook.png"));
         panels = (JPanel) chessBoard.getComponent(7);
         panels.add(pieces);
+
+        //black pawns are being added to squares 48-56
         for (int i = 48; i < 56; i++) {
             pieces = new JLabel(new ImageIcon("Img/BlackPawn.png"));
             panels = (JPanel) chessBoard.getComponent(i);
             panels.add(pieces);
         }
+
+        //black rook being added to square 56
         pieces = new JLabel(new ImageIcon("Img/BlackRook.png"));
         panels = (JPanel) chessBoard.getComponent(56);
         panels.add(pieces);
+
+        //black knight being added to square 57
         pieces = new JLabel(new ImageIcon("Img/BlackKnight.png"));
         panels = (JPanel) chessBoard.getComponent(57);
         panels.add(pieces);
+
+        //black knight being added to square 62
         pieces = new JLabel(new ImageIcon("Img/BlackKnight.png"));
         panels = (JPanel) chessBoard.getComponent(62);
         panels.add(pieces);
+
+        //black bishop being added to square 58
         pieces = new JLabel(new ImageIcon("Img/BlackBishop.png"));
         panels = (JPanel) chessBoard.getComponent(58);
         panels.add(pieces);
+
+        //black bishop being added to square 61
         pieces = new JLabel(new ImageIcon("Img/BlackBishop.png"));
         panels = (JPanel) chessBoard.getComponent(61);
         panels.add(pieces);
+
+        //black king being added to square 59
         pieces = new JLabel(new ImageIcon("Img/BlackKing.png"));
         panels = (JPanel) chessBoard.getComponent(59);
         panels.add(pieces);
+
+        //black queen being added to square 60
         pieces = new JLabel(new ImageIcon("Img/BlackQueen.png"));
         panels = (JPanel) chessBoard.getComponent(60);
         panels.add(pieces);
+
+        //black rook being added to square 63
         pieces = new JLabel(new ImageIcon("Img/BlackRook.png"));
         panels = (JPanel) chessBoard.getComponent(63);
         panels.add(pieces);
+
         moveCounter = 0;
         white2Move = true;
         agent = new AIAgent();
@@ -1432,10 +1471,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                         }
                     }
                 }
-            } else if (pieceName.equals("BlackPawn")) {
+            } else if (pieceName.equals("Img/BlackPawn")) {
                 if (startY == 6) { // This is were the pawn is making its first move....
             /*
-            if the pawn is makeing ites first movement....
+            if the pawn is making its first movement....
             the pawn can either move one square or two squares...in the Y direction
             as long as we are moving up the board!!! and also there is no movement in the
             x direction
@@ -1466,7 +1505,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                             validMove = true;
                 /*
                   We need a variable to inform us that the Black Pawn has reached the top
-                  of the board and can now trun into a Black Queen
+                  of the board and can now turn into a Black Queen
                 */
                             if (landingY == 0) {
                                 progression = true;
