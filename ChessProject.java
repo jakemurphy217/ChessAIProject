@@ -185,17 +185,74 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     */
     private Stack getWhitePawnSquares(int x, int y, String piece) {
 
-
         Stack moves = new Stack();
+        Square startingSquare = new Square(x, y, piece);
+        Move validM, validM2, validM3, validM4;
 
+        for (int i = 1; i <= 2; i++) {
+            int tmpx = x;
+            int tmpy = y + 1;
 
+            //on the first move the agent can either can move 1 or 2 squares
+            if (!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
+                Square tmp = new Square(tmpx, tmpy, piece);
+                validM = new Move(startingSquare, tmp);
 
+                if (y == 1) {
+                    if (!(piecePresent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20)))) {
+                        moves.push(validM);
+                    }
+                }
+            }
+        }
 
-// To be completed...
+        for (int i = 1; i < 2; i++) {
+            int tmpx = x;
+            int tmpy = y + 1;
+            if (!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
+                Square tmp = new Square(tmpx, tmpy, piece);
+                validM2 = new Move(startingSquare, tmp);
+                if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                    moves.push(validM2);
+                }
+            }
+        }
 
+        //agent pawn attacking opponent diagonally to the left
+        for (int i = 1; i < 2; i++) {
+            int tmpx = x + i;
+            int tmpy = y + i;
 
+            if (!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
+                Square tmp = new Square(tmpx, tmpy, piece);
+                validM3 = new Move(startingSquare, tmp);
+                if (piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                    if (checkBlackOponent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                        moves.push(validM3);
+                    }
+                }
+            }
+        }
+
+        //agent pawn attacking opponent diagonally to the right
+
+        for (int i = 1; i < 2; i++) {
+            int tmpx = x - i;
+            int tmpy = y + i;
+
+            if (!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
+                Square tmp = new Square(tmpx, tmpy, piece);
+                validM4 = new Move(startingSquare, tmp);
+
+                if (piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))){
+                    moves.push(validM4);
+                }
+            }
+        }
         return moves;
     }
+
+    ///////// end of white pawn(agent) /////////
 
 
     /*
@@ -855,15 +912,28 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
           We need to identify all the possible moves that can be made by the AI Opponent
       */
             if (tmpString.contains("Knight")) {
+
                 tmpMoves = getKnightMoves(s.getXC(), s.getYC(), s.getName());
+
             } else if (tmpString.contains("Bishop")) {
+
                 tmpMoves = getBishopMoves(s.getXC(), s.getYC(), s.getName());
+
             } else if (tmpString.contains("Pawn")) {
+
+                //applying the moves possible to the pawn
+                tmpMoves = getWhitePawnSquares(s.getXC(), s.getYC(), s.getName());
+
             } else if (tmpString.contains("Rook")) {
+
                 tmpMoves = getRookMoves(s.getXC(), s.getYC(), s.getName());
+
             } else if (tmpString.contains("Queen")) {
+
                 tmpMoves = getQueenMoves(s.getXC(), s.getYC(), s.getName());
+
             } else if (tmpString.contains("King")) {
+
                 tmpMoves = getKingSquares(s.getXC(), s.getYC(), s.getName());
             }
 
@@ -1525,7 +1595,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                         }
                     }
                 }
-            } else if (pieceName.equals("WhitePawn")) {
+            } else if (pieceName.equals("Img/WhitePawn")) {
                 if (startY == 1) {
                     if (((xMovement == 0)) && ((yMovement == 1) || ((yMovement) == 2))) {
                         if (yMovement == 2) {
