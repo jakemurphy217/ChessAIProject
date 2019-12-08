@@ -46,8 +46,8 @@ public class AIAgent {
 
 
             //giving the centre of the board 1 point
-            if ((bestMove.getStart().getYC() < bestMove.getLanding().getYC())
-                    && (bestMove.getLanding().getXC() == 3) && (bestMove.getLanding().getYC() == 3)
+            if ((bestMove.getStart().getYC() < bestMove.getLanding().getYC()) &&
+                       (bestMove.getLanding().getXC() == 3) && (bestMove.getLanding().getYC() == 3)
                     || (bestMove.getLanding().getXC() == 4) && (bestMove.getLanding().getYC() == 3)
 
                     || (bestMove.getLanding().getXC() == 2) && (bestMove.getLanding().getXC() == 3)
@@ -88,7 +88,7 @@ public class AIAgent {
                 gameScore = 0;
                 blackPosition = (Square) blackStack.pop();
 
-                if ((bestMove.getLanding().getXC() == blackPosition.getXC() && (bestMove.getLanding().getYC() == blackPosition.getYC() ))){
+                if ((bestMove.getLanding().getXC() == blackPosition.getXC()) && (bestMove.getLanding().getYC() == blackPosition.getYC() )){
 
                   if (blackPosition.getName().equals("BlackPawn")){
                     gameScore = 2;
@@ -112,7 +112,7 @@ public class AIAgent {
                 }
                 //after values are assigned to eah piece the agent chooses the best score
 
-              if (gameScore > 0){
+              if (gameScore > chosenPiece){
                 chosenPiece = gameScore;
                 attackingMove = bestMove;
               }
