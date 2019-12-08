@@ -39,6 +39,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     AIAgent agent;
     Boolean agentwins;
     Stack temporary;
+    static int AILevel;
 
 
     public ChessProject() {
@@ -311,7 +312,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
 
       This shows us that for a single square with coordinates of (x, y) we need to check eight other potential squares.
-      Remember we only need to check squares and contsruct moves if the movement (Piece on a Square --> a new Square) is
+      Remember we only need to check squares and construct moves if the movement (Piece on a Square --> a new Square) is
       going to be placing the piece back on the board, if we are not taking our own piece and if the resulting landing square
       is not adjacent to the enemy King.
     */
@@ -356,7 +357,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
       This process is followed again for the other temporary squares created.
 
-      After we check for all possoble squares on this column, we repeat the process for the other columns as identified above
+      After we check for all possible squares on this column, we repeat the process for the other columns as identified above
       in the grid.
     */
             Square tmp = new Square(tmpx1, y, piece);
@@ -464,12 +465,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             }
         }
         return moves;
-    } // end of the method getKingSquares()
+    }
+    ///////// end of the method getKingSquares() /////////
 
 
-    /*
-        Method to return all the possible moves that a Queen can make
-    */
+
+    ///////// Method to return all the possible moves that a Queen can make /////////
+
     private Stack getQueenMoves(int x, int y, String piece) {
         Stack completeMoves = new Stack();
         Stack tmpMoves = new Stack();
@@ -492,6 +494,8 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         }
         return completeMoves;
     }
+
+    ///////// end of queens movement(agent) /////////
 
     /*
       Method to return all the squares that a Rook can move to. The Rook can either move in an x direction or
@@ -618,11 +622,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             }
         }//end of the loop with x increasing and Y doing nothing...
         return moves;
-    }// end of get Rook Moves.
+    }
+    ///////// end of get Rook Moves /////////
 
     /*
       Method to return all the squares that a Bishop can move to. As seen in the below grid, the Bishop
-      can move in a diagonal moement. There are essentially four different directions from a single
+      can move in a diagonal movement. There are essentially four different directions from a single
       square that the Bishop can move along. The Bishop can move any distance along this diagonal
       as long as there is nothing in the way. The Bishop can also take an opponent piece but cannot take its
       own piece.
@@ -793,9 +798,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     }
 
 
-    /*
-            Method to colour a stack of Squares
-    */
+
+    /* Method to colour a stack of Squares  */
+
     private void colorSquares(Stack squares) {
         Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 3);
         while (!squares.empty()) {
@@ -806,9 +811,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         }
     }
 
-    /*
-        Method to get the landing square of a bunch of moves...
-    */
+
+    /* Method to get the landing square of a bunch of moves... */
+
     private void getLandingSquares(Stack found) {
         Move tmp;
         Square landing;
@@ -822,9 +827,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     }
 
 
-    /*
-      Method to find all the White Pieces.
-    */
+
+    /* Method to find all the White Pieces. */
+
     private Stack findWhitePieces() {
         Stack squares = new Stack();
         String icon;
@@ -850,17 +855,17 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         return squares;
     }
 
-    /*
-        This method checks if there is a piece present on a particular square.
-    */
+
+    /*    This method checks if there is a piece present on a particular square.  */
+
     private Boolean piecePresent(int x, int y) {
         Component c = chessBoard.findComponentAt(x, y);
         return !(c instanceof JPanel);
     }
 
-    /*
-        This is a method to check if a piece is a Black piece.
-    */
+
+    /* This is a method to check if a piece is a Black piece.  */
+
     private Boolean checkWhiteOponent(int newX, int newY) {
         Boolean oponent;
         Component c1 = chessBoard.findComponentAt(newX, newY);
@@ -892,6 +897,38 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         }
     }
 
+    //method to find all black pieces
+    Stack BlackStackPieces(){
+        Stack squares = new Stack();
+        String icon;
+        int x;
+        int y;
+        String pieceName;
+        for (int i = 0; i < 600; i += 75){
+            for( int j = 0; j < 600; j += 75){
+                y = i / 75;
+                x = j / 75;
+                Component tmp = chessBoard.findComponentAt(j,i);
+
+                if(tmp instanceof  JLabel){
+                    chessPiece = (JLabel) tmp;
+                    icon = chessPiece.getIcon().toString();
+                    pieceName = icon.substring(0,(icon.length() - 4));
+                    if(pieceName.contains("Black")){
+                        Square stmp = new Square(x,y, pieceName);
+                        squares.push(stmp);
+                    }
+                }
+            }
+        }
+        return squares;
+    }
+
+
+
+
+    // method for finding black pieces ///////////////////////////
+
     private void makeAIMove() {
     /*
       When the AI Agent decides on a move, a red border shows the square from where the move started and the
@@ -901,6 +938,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         layeredPane.validate();
         layeredPane.repaint();
         Stack white = findWhitePieces();
+        Stack black = BlackStackPieces();
         Stack completeMoves = new Stack();
         Move tmp;
         while (!white.empty()) {
@@ -972,57 +1010,125 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 System.out.println("The " + s1.getName() + " can move from (" + s1.getXC() + ", " + s1.getYC() + ") to the following square: (" + s2.getXC() + ", " + s2.getYC() + ")");
                 testing.push(tmpMove);
             }
-            System.out.println("=============================================================");
-            Border redBorder = BorderFactory.createLineBorder(Color.RED, 3);
-            Move selectedMove = agent.randomMove(testing);
-            Square startingPoint = selectedMove.getStart();
-            Square landingPoint = selectedMove.getLanding();
-            int startX1 = (startingPoint.getXC() * 75) + 20;
-            int startY1 = (startingPoint.getYC() * 75) + 20;
-            int landingX1 = (landingPoint.getXC() * 75) + 20;
-            int landingY1 = (landingPoint.getYC() * 75) + 20;
-            System.out.println("-------- Move " + startingPoint.getName() + " (" + startingPoint.getXC() + ", " + startingPoint.getYC() + ") to (" + landingPoint.getXC() + ", " + landingPoint.getYC() + ")");
 
-            Component c = chessBoard.findComponentAt(startX1, startY1);
-            Container parent = c.getParent();
-            parent.remove(c);
-            int panelID = (startingPoint.getYC() * 8) + startingPoint.getXC();
-            panels = (JPanel) chessBoard.getComponent(panelID);
-            panels.setBorder(redBorder);
-            parent.validate();
+            if (AILevel == 0) {
+                System.out.println("=============================================================");
+                Border redBorder = BorderFactory.createLineBorder(Color.RED, 3);
+                Move selectedMove = agent.randomMove(testing);
+                Square startingPoint = selectedMove.getStart();
+                Square landingPoint = selectedMove.getLanding();
+                int startX1 = (startingPoint.getXC() * 75) + 20;
+                int startY1 = (startingPoint.getYC() * 75) + 20;
+                int landingX1 = (landingPoint.getXC() * 75) + 20;
+                int landingY1 = (landingPoint.getYC() * 75) + 20;
+                System.out.println("-------- Move " + startingPoint.getName() + " (" + startingPoint.getXC() + ", " + startingPoint.getYC() + ") to (" + landingPoint.getXC() + ", " + landingPoint.getYC() + ")");
 
-            Component l = chessBoard.findComponentAt(landingX1, landingY1);
-            if (l instanceof JLabel) {
-                Container parentlanding = l.getParent();
-                JLabel awaitingName = (JLabel) l;
-                String agentCaptured = awaitingName.getIcon().toString();
-                if (agentCaptured.contains("King")) {
-                    agentwins = true;
-                }
-                parentlanding.remove(l);
-                parentlanding.validate();
-                pieces = new JLabel(new ImageIcon(startingPoint.getName() + ".png"));
-                int landingPanelID = (landingPoint.getYC() * 8) + landingPoint.getXC();
-                panels = (JPanel) chessBoard.getComponent(landingPanelID);
-                panels.add(pieces);
+                Component c = chessBoard.findComponentAt(startX1, startY1);
+                Container parent = c.getParent();
+                parent.remove(c);
+                int panelID = (startingPoint.getYC() * 8) + startingPoint.getXC();
+                panels = (JPanel) chessBoard.getComponent(panelID);
                 panels.setBorder(redBorder);
-                layeredPane.validate();
-                layeredPane.repaint();
+                parent.validate();
 
-                if (agentwins) {
-                    JOptionPane.showMessageDialog(null, "The AI Agent has won!");
-                    System.exit(0);
+                Component l = chessBoard.findComponentAt(landingX1, landingY1);
+                if (l instanceof JLabel) {
+                    Container parentlanding = l.getParent();
+                    JLabel awaitingName = (JLabel) l;
+                    String agentCaptured = awaitingName.getIcon().toString();
+                    if (agentCaptured.contains("King")) {
+                        agentwins = true;
+                    }
+                    parentlanding.remove(l);
+                    parentlanding.validate();
+                    pieces = new JLabel(new ImageIcon(startingPoint.getName() + ".png"));
+                    int landingPanelID = (landingPoint.getYC() * 8) + landingPoint.getXC();
+                    panels = (JPanel) chessBoard.getComponent(landingPanelID);
+                    panels.add(pieces);
+                    panels.setBorder(redBorder);
+                    layeredPane.validate();
+                    layeredPane.repaint();
+
+                    if (agentwins) {
+                        JOptionPane.showMessageDialog(null, "The AI Agent has won!");
+                        System.exit(0);
+                    }
+                } else {
+                    pieces = new JLabel(new ImageIcon(startingPoint.getName() + ".png"));
+                    int landingPanelID = (landingPoint.getYC() * 8) + landingPoint.getXC();
+                    panels = (JPanel) chessBoard.getComponent(landingPanelID);
+                    panels.add(pieces);
+                    panels.setBorder(redBorder);
+                    layeredPane.validate();
+                    layeredPane.repaint();
                 }
-            } else {
-                pieces = new JLabel(new ImageIcon(startingPoint.getName() + ".png"));
-                int landingPanelID = (landingPoint.getYC() * 8) + landingPoint.getXC();
-                panels = (JPanel) chessBoard.getComponent(landingPanelID);
-                panels.add(pieces);
-                panels.setBorder(redBorder);
-                layeredPane.validate();
-                layeredPane.repaint();
+                white2Move = false;
             }
-            white2Move = false;
+
+            //NextBestMove
+
+            else if (AILevel == 1){
+
+                System.out.println("=============================================================");
+                Border redBorder = BorderFactory.createLineBorder(Color.RED, 3);
+                Move selectedMove = agent.nextBestMove(testing,black);
+                Square startingPoint = (Square) selectedMove.getStart();
+                Square landingPoint = (Square) selectedMove.getLanding();
+                int startX1 = (startingPoint.getXC() * 75) + 20;
+                int startY1 = (startingPoint.getYC() * 75) + 20;
+                int landingX1 = (landingPoint.getXC() * 75) + 20;
+                int landingY1 = (landingPoint.getYC() * 75) + 20;
+                System.out.println("-------- Move " + startingPoint.getName() + " (" + startingPoint.getXC() + ", " + startingPoint.getYC() + ") to (" + landingPoint.getXC() + ", " + landingPoint.getYC() + ")");
+
+                Component c = (JLabel) chessBoard.findComponentAt(startX1,startY1);
+                Container parent = c.getParent();
+                parent.remove(c);
+                int panelID = (startingPoint.getYC() * 8) + startingPoint.getXC();
+                panels = (JPanel) chessBoard.getComponent(panelID);
+                panels.setBorder(redBorder);
+                parent.validate();
+
+
+                Component l = chessBoard.findComponentAt(landingX1, landingY1);
+                if (l instanceof JLabel) {
+                    Container parentlanding = l.getParent();
+                    JLabel awaitingName = (JLabel) l;
+                    String agentCaptured = awaitingName.getIcon().toString();
+                    if (agentCaptured.contains("King")) {
+                        agentwins = true;
+                    }
+                    parentlanding.remove(l);
+                    parentlanding.validate();
+                    pieces = new JLabel(new ImageIcon(startingPoint.getName() + ".png"));
+                    int landingPanelID = (landingPoint.getYC() * 8) + landingPoint.getXC();
+                    panels = (JPanel) chessBoard.getComponent(landingPanelID);
+                    panels.add(pieces);
+                    panels.setBorder(redBorder);
+                    layeredPane.validate();
+                    layeredPane.repaint();
+
+                    //output when the agent wins
+                    if (agentwins){
+                        JOptionPane.showMessageDialog(null,"The AI agent Won");
+                        System.exit(0);
+                    }
+                }
+                else{
+                    pieces = new JLabel(new ImageIcon(startingPoint.getName() + ".png"));
+                    int landingPanelID = (landingPoint.getYC() * 8) + landingPoint.getXC();
+                    panels = (JPanel) chessBoard.getComponent(landingPanelID);
+                    panels.add(pieces);
+                    panels.setBorder(redBorder);
+                    layeredPane.validate();
+                    layeredPane.repaint();
+                }
+
+                    white2Move = false;
+
+            }
+
+
+
         }
     }
 
@@ -1747,6 +1853,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         Object[] options = {"Random Moves", "Best Next Move", "Based on Opponents Moves"};
         int n = JOptionPane.showOptionDialog(frame, "Lets play some Chess, choose your AI opponent", "Introduction to AI Continuous Assessment", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
         System.out.println("The selected variable is : " + n);
+        AILevel = n;
         frame.makeAIMove();
     }
 }
